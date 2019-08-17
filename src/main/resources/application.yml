@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      database: leetcode
+      host: 120.77.176.55
+server:
+  port: 8080
