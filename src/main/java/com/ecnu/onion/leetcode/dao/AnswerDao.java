@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
+
 /**
  * @author onion
  * @date 2019-08-15 -17:04
@@ -14,5 +16,5 @@ public interface AnswerDao extends MongoRepository<Answer, String> {
     Page<Answer> findByTitleLike(String title, Pageable pageable);
     Page<Answer> findByType(String type, Pageable pageable);
     Page<Answer> findByTagsContains(String tag, Pageable pageable);
-
+    List<Answer> findByTagsContains(String tag);
 }

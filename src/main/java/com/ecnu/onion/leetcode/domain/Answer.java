@@ -38,4 +38,17 @@ public class Answer implements Serializable {
 
     private String note;
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Answer){
+            Answer answer = (Answer)obj;
+            return this.id.equals(answer.id);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

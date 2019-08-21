@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+
 /**
  * @author onion
  * @date 2019-08-15 -17:04
@@ -45,5 +47,16 @@ public class AnswerService {
 
     public Page<Answer> findAll(Pageable pageable) {
         return answerDao.findAll(pageable);
+    }
+
+    public List<Answer> findRelated(List<String> tagList, String id){
+        Map<String,Answer> map = new HashMap<>();
+        for (String s : tagList) {
+            answerDao.findByTagsContains(s).forEach(e->map.put(e.getId(),e));
+        }
+        map.remove(id);
+        List<Answer> res = new ArrayList<>();
+        map.keySet().forEach(e->res.add(map.get(e)));
+        return res;
     }
 }

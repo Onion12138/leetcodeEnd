@@ -10,6 +10,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author onion
  * @date 2019-08-15 -17:05
@@ -23,7 +26,8 @@ public class AnswerController {
     private PageRequest getRequest(Boolean sortById, Integer page, Integer size){
         PageRequest pageRequest;
         if(sortById) {
-            pageRequest = PageRequest.of(page-1, size);
+            Sort sort = new Sort(Direction.ASC, "id");
+            pageRequest = PageRequest.of(page-1, size, sort);
         }
         else{
             Sort sort = new Sort(Direction.DESC, "star");
@@ -53,10 +57,7 @@ public class AnswerController {
                            @RequestParam String id){
         PageRequest pageRequest = getRequest(sortById, page, size);
         Page<Answer> answers = answerService.findByIdLike(id, pageRequest);
-        if(answers != null)
-            return Result.success(answers, "查找成功");
-        else
-            return Result.failure("找不到结果");
+        return Result.success(answers, "查找成功");
     }
     @GetMapping("/title")
     public Result findByTitle(@RequestParam Integer page,
@@ -65,8 +66,6 @@ public class AnswerController {
                               @RequestParam String title){
         PageRequest pageRequest = getRequest(sortById, page, size);
         Page<Answer> answers = answerService.findByTitle(title, pageRequest);
-        if(answers == null || answers.getTotalElements() == 0)
-            return Result.failure("找不到结果");
         return Result.success(answers, "查找成功");
     }
     @GetMapping("/type")
@@ -76,8 +75,6 @@ public class AnswerController {
                              @RequestParam String type){
         PageRequest pageRequest = getRequest(sortById, page, size);
         Page<Answer> answers = answerService.findByType(type, pageRequest);
-        if(answers == null || answers.getTotalElements() == 0)
-            return Result.failure("找不到结果");
         return Result.success(answers, "查找成功");
     }
 
@@ -88,8 +85,6 @@ public class AnswerController {
                             @RequestParam String tag){
         PageRequest pageRequest = getRequest(sortById, page, size);
         Page<Answer> answers = answerService.findByTag(tag, pageRequest);
-        if(answers == null || answers.getTotalElements() == 0)
-            return Result.failure("找不到结果");
         return Result.success(answers, "查找成功");
     }
 
@@ -104,5 +99,13 @@ public class AnswerController {
         answerService.updateSolution(answer);
         return Result.success("修改成功");
     }
+
+    @GetMapping("/relation")
+    public Result findRelated(@RequestParam String tags, @RequestParam String id){
+        List<String> tagList = Arrays.asList(tags.split(","));
+        List<Answer> related = answerService.findRelated(tagList, id);
+        return Result.success(related, "查找成功");
+    }
+
 
 }
