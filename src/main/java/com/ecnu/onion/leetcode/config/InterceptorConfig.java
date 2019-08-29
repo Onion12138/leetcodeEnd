@@ -18,6 +18,7 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptor)
-                .addPathPatterns("/answer/**");
+                .addPathPatterns("/answer/**")
+                .addPathPatterns("/translation/**");
     }
 }
